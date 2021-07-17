@@ -47,10 +47,11 @@ pragma solidity >=0.7.0 <0.9.0;
      
      function placeBet( uint256 _choice ) public payable {
          
-       
+         require(players.length<=2,"only two participants allowed");
          require( !checkPlayerBet(msg.sender)) ;
          Bet storage bet = betChoice[msg.sender];
          require( msg.value >= minimumBet,"bet amount should be greater than or equal to minimum bet amount" );
+         
          
          bet.choice = _choice;
          bet.betAmount = msg.value;
@@ -65,7 +66,7 @@ pragma solidity >=0.7.0 <0.9.0;
         return (address(this).balance);
     }
      
-     function getPrizes(uint256 _winningChoice) public {
+     function getPrizes(uint256 _winningChoice) onlyOwner public {
          
          uint256 escrowBalance = (address(this).balance);
          uint256 winningAmount = (escrowBalance * 99)/100;
@@ -84,5 +85,6 @@ pragma solidity >=0.7.0 <0.9.0;
          // players.length = 0;
           
      }
+     delete players;
  }
  }
